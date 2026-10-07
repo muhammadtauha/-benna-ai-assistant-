@@ -1,0 +1,5 @@
+(node:26156) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[DB] MongoDB connected: 127.0.0.1
+[API] listening on :1942
+[ASSISTANT retrieval] semantic pass skipped: SUPABASE_DB_URL (or PG_URL) is not configured

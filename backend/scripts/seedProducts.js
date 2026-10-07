@@ -1,0 +1,131 @@
+// Seed a small demo catalog so the assistant's retrieval returns real cards.
+// Usage: node scripts/seedProducts.js
+require("dotenv").config();
+const mongoose = require("mongoose");
+const connectDB = require("../db/mongodb");
+const Product = require("../app/vendor/model/product.model");
+
+const DEMO = [
+  {
+    name: "White Cement 50kg Bag",
+    nameArabic: "أسمنت أبيض 50 كجم",
+    description: "Premium white Portland cement for finishing and decorative works.",
+    brand: "Saudi Cement",
+    sku: "CEM-WHT-50",
+    collections: "Cement & Concrete",
+    price: 28.5,
+    unitOfMeasurement: "bag",
+    inventory: "InStock",
+    productImageUrl: "",
+    uploadedByVendorId: "demo-vendor",
+    status: "approved",
+    visible: true,
+    uniqueProductSlug: "white-cement-50kg-bag",
+  },
+  {
+    name: "Porcelain Floor Tiles 60x60 Beige",
+    nameArabic: "بلاط بورسلان أرضيات 60x60 بيج",
+    description: "Polished porcelain floor tiles, slip resistant, per sqm pricing.",
+    brand: "Rak Ceramics",
+    sku: "TIL-POR-6060",
+    collections: "Tiles & Flooring",
+    price: 42,
+    unitOfMeasurement: "sqm",
+    inventory: "InStock",
+    productImageUrl: "",
+    uploadedByVendorId: "demo-vendor",
+    status: "approved",
+    visible: true,
+    uniqueProductSlug: "porcelain-floor-tiles-60x60-beige",
+  },
+  {
+    name: "PPR Pipe 32mm PN20",
+    nameArabic: "ماسورة PPR مقاس 32 مم",
+    description: "Green PPR pipe for hot and cold water, 4m length.",
+    brand: "AquaTech",
+    sku: "PPR-32-PN20",
+    collections: "Plumbing",
+    price: 18.75,
+    unitOfMeasurement: "piece",
+    inventory: "InStock",
+    productImageUrl: "",
+    uploadedByVendorId: "demo-vendor",
+    status: "approved",
+    visible: true,
+    uniqueProductSlug: "ppr-pipe-32mm-pn20",
+  },
+  {
+    name: "Steel Rebar 12mm Grade 60",
+    nameArabic: "حديد تسليح 12 مم",
+    description: "Deformed steel reinforcement bar, 12m length, per ton pricing.",
+    brand: "SABIC Steel",
+    sku: "REB-12-G60",
+    collections: "Steel & Rebar",
+    price: 2650,
+    unitOfMeasurement: "ton",
+    inventory: "InStock",
+    productImageUrl: "",
+    uploadedByVendorId: "demo-vendor",
+    status: "approved",
+    visible: true,
+    uniqueProductSlug: "steel-rebar-12mm-grade-60",
+  },
+  {
+    name: "Gypsum Board 12.5mm Standard",
+    nameArabic: "لوح جبس 12.5 مم",
+    description: "Standard gypsum plasterboard 1200x2400mm for partitions.",
+    brand: "Knauf",
+    sku: "GYP-125-STD",
+    collections: "Boards & Drywall",
+    price: 22,
+    unitOfMeasurement: "sheet",
+    inventory: "InStock",
+    productImageUrl: "",
+    uploadedByVendorId: "demo-vendor",
+    status: "approved",
+    visible: true,
+    uniqueProductSlug: "gypsum-board-125mm-standard",
+  },
+  {
+    name: "Interior Emulsion Paint White 18L",
+    nameArabic: "دهان داخلي أبيض 18 لتر",
+    description: "Washable interior emulsion paint, matt finish.",
+    brand: "Jotun",
+    sku: "PNT-EMU-18",
+    collections: "Paints",
+    price: 145,
+    unitOfMeasurement: "bucket",
+    inventory: "InStock",
+    productImageUrl: "",
+    uploadedByVendorId: "demo-vendor",
+    status: "approved",
+    visible: true,
+    uniqueProductSlug: "interior-emulsion-paint-white-18l",
+  },
+  {
+    name: "Ready Mix Concrete C30",
+    nameArabic: "خرسانة جاهزة C30",
+    description: "Ready-mixed concrete, 30 MPa, delivered to site. Quote only.",
+    brand: "Saudi ReadyMix",
+    sku: "RMC-C30",
+    collections: "Cement & Concrete",
+    price: 0,
+    unitOfMeasurement: "m3",
+    inventory: "InStock",
+    isRFQ: true,
+    productImageUrl: "",
+    uploadedByVendorId: "demo-vendor",
+    status: "approved",
+    visible: true,
+    uniqueProductSlug: "ready-mix-concrete-c30",
+  },
+];
+
+(async () => {
+  await connectDB();
+  for (const p of DEMO) {
+    await Product.updateOne({ sku: p.sku }, { $set: p }, { upsert: true });
+  }
+  console.log(`Seeded ${DEMO.length} demo products.`);
+  await mongoose.disconnect();
+})();
