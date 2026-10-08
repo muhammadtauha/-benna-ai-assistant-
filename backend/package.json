@@ -2,6 +2,7 @@
   "name": "benna-assistant-api",
   "version": "1.0.0",
   "private": true,
+  "engines": { "node": ">=18" },
   "description": "Standalone backend for the Benna AI Procurement Assistant",
   "main": "app.js",
   "scripts": {
