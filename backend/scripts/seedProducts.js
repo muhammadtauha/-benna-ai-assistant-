@@ -5,6 +5,29 @@ const mongoose = require("mongoose");
 const connectDB = require("../db/mongodb");
 const Product = require("../app/vendor/model/product.model");
 
+// Real Benna category images (from the storefront's dealsConfig CDN assets).
+const IMG = {
+  "CEM-WHT-50": "https://static.wixstatic.com/media/b99a57_4a1f3f450aa9450f85515031b3f2cb6e~mv2.jpg",
+  "CEM-OPC-50": "https://static.wixstatic.com/media/a3b8d7_2fdc5e16c9484b12a48207f662a594af~mv2.jpg",
+  "TIL-POR-6060": "https://static.wixstatic.com/media/a3b8d7_037a45671d2e4d0d9e1789e3af24b975~mv2.jpg",
+  "TIL-CER-2540": "https://static.wixstatic.com/media/b99a57_45894a2d055e4b1abf7dac779524e380~mv2.jpg",
+  "PPR-32-PN20": "https://static.wixstatic.com/media/b99a57_f3959b698f954854a371fa7ad5911fd0~mv2.jpg",
+  "PVC-110-6M": "https://static.wixstatic.com/media/a3b8d7_2354e24804134cc4b4dfefaf1188a813~mv2.jpg",
+  "REB-12-G60": "https://static.wixstatic.com/media/b99a57_ee69ec4b62f94b1497e0fd89332226c4~mv2.png",
+  "GYP-125-STD": "https://static.wixstatic.com/media/bcbfd4_b1b2defbea83487b9a16a9f49b28df12~mv2.jpg",
+  "PNT-EMU-18": "https://static.wixstatic.com/media/b99a57_4a2e35e25a3144448e4f186cbf94cce8~mv2.jpg",
+  "PNT-EXT-18": "https://static.wixstatic.com/media/b99a57_4a2e35e25a3144448e4f186cbf94cce8~mv2.jpg",
+  "RMC-C30": "https://static.wixstatic.com/media/a3b8d7_1bcebaeb2f6b44d494d9644dec593035~mv2.jpg",
+  "BLK-HOL-20": "https://static.wixstatic.com/media/a3b8d7_f4b3303df5d045a7991737cec2309c70~mv2.jpg",
+  "SND-WSH-M3": "https://static.wixstatic.com/media/a3b8d7_fc0a2502e22d4c7abd58cfe997f42536~mv2.jpg",
+  "AGG-20-M3": "https://static.wixstatic.com/media/a3b8d7_fe18a2794bf94861abfeea632feb5b00~mv2.jpg",
+  "CBL-25-100": "https://static.wixstatic.com/media/a3b8d7_49d5c9d0d10e491fb0b9582f87752f34~mv2.jpg",
+  "INS-RW-50": "https://static.wixstatic.com/media/a3b8d7_173c6a99f3e0428aabcb78afccbc2179~mv2.jpg",
+  "WPR-BIT-4": "https://static.wixstatic.com/media/bcbfd4_ce51213ddee24f0d9c9d9d298467a9f8~mv2.jpg",
+  "TLS-LAD-6": "https://static.wixstatic.com/media/b99a57_44da40bf6d5243d2a7cbea85247fe4c8~mv2.jpg",
+  "SFT-HLM-W": "https://static.wixstatic.com/media/b99a57_319066a13a7144619ab810e12a62a562~mv2.jpg",
+};
+
 const DEMO = [
   {
     name: "White Cement 50kg Bag",
@@ -316,7 +339,8 @@ const DEMO = [
 (async () => {
   await connectDB();
   for (const p of DEMO) {
-    await Product.updateOne({ sku: p.sku }, { $set: p }, { upsert: true });
+    const doc = { ...p, productImageUrl: IMG[p.sku] || p.productImageUrl || "" };
+    await Product.updateOne({ sku: p.sku }, { $set: doc }, { upsert: true });
   }
   console.log(`Seeded ${DEMO.length} demo products.`);
   await mongoose.disconnect();
