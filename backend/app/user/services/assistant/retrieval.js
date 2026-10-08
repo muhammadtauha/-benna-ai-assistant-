@@ -57,14 +57,10 @@ function buildFilters(intent) {
     });
   }
 
-  if (Array.isArray(intent.categories) && intent.categories.length) {
-    and.push({
-      $or: intent.categories.map((c) => ({
-        collections: { $regex: new RegExp(escapeLiteral(c), "i") },
-      })),
-    });
-  }
-
+  // NOTE: intent.categories is deliberately NOT a hard filter — the model
+  // often emits display-style labels ("Porcelain Floor Tiles") that never
+  // appear verbatim in `collections`, which would exclude correct matches.
+  // Categories are folded into the word-match bonus in keywordSearch instead.
   if (and.length) filter.$and = and;
   return filter;
 }
@@ -83,6 +79,9 @@ async function keywordSearch(intent, { limit = 40 } = {}) {
     ...new Set([
       ...term.split(/\s+/).filter((w) => w.length > 1),
       ...(intent.keywords || []).filter((w) => String(w).length > 1),
+      ...(intent.categories || [])
+        .flatMap((c) => String(c).split(/\s+/))
+        .filter((w) => w.length > 1),
     ]),
   ];
   const wordPatterns = [...new Set(words.flatMap(buildSearchVariants))].map(escapeRegex);
