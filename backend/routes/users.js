@@ -12,6 +12,10 @@ router.post("/auth/registration", authLimiter, AUTH_CONTROLLER.register);
 router.post("/auth/customer/login", authLimiter, AUTH_CONTROLLER.login);
 router.get("/auth/me", AUTH.authenticate, AUTH_CONTROLLER.me);
 
+// Public product detail (storefront parity — no auth needed to browse)
+const PRODUCT = require("../app/user/controller/product.controller");
+router.get("/website/products/:slug", PRODUCT.getBySlug);
+
 // Assistant — mounted under /website to keep the original URL shape:
 //   /api/users/website/assistant/*
 router.use("/website", assistantRoutes);

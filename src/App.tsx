@@ -7,6 +7,7 @@ import AssistantBubble from "@/components/assistant/AssistantBubble";
 
 const AssistantPage = lazy(() => import("@/pages/AssistantPage"));
 const AuthPage = lazy(() => import("@/pages/AuthPage"));
+const ProductDetailPage = lazy(() => import("@/pages/ProductDetailPage"));
 
 const Fallback = () => (
   <div className="flex min-h-screen items-center justify-center text-muted-foreground">
@@ -28,6 +29,7 @@ const App = () => (
               </Route>
               <Route path="/login" element={<AuthPage mode="login" />} />
               <Route path="/register" element={<AuthPage mode="register" />} />
+              <Route path="/product/:slug" element={<ProductDetailPage />} />
               <Route path="*" element={<Navigate to="/assistant" replace />} />
             </Routes>
           </Suspense>
